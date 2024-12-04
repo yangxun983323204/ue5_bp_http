@@ -84,4 +84,19 @@ private:
     FHttpRequestWrapperProgressDelegate RequestProgressDelegate;
     FHttpRequestWrapperWillRetryDelegate RequestWillRetryDelegate;
     FHttpRequestWrapperHeaderReceivedDelegate HeaderReceivedDelegate;
+
+public:
+    UPROPERTY(BlueprintReadOnly)
+    FString Debug_Verb;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Debug_URL;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> Debug_Headers;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Debug_ContentAsString;
+
+    void SetDebugInfo();
 };

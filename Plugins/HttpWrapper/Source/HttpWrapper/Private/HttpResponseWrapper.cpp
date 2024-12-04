@@ -9,6 +9,7 @@ UHttpResponseWrapper* UHttpResponseWrapper::CreateFromExternalPtr(FHttpResponseP
 {
     auto NewObj = NewObject<UHttpResponseWrapper>();
     NewObj->Response = InResponse;
+    NewObj->SetDebugInfo();
     return NewObj;
 }
 
@@ -25,4 +26,22 @@ const TArray<uint8>& UHttpResponseWrapper::GetContent()
 FString UHttpResponseWrapper::GetContentAsString()
 {
     return Response->GetContentAsString();
+}
+
+void UHttpResponseWrapper::SetDebugInfo()
+{
+    if(Response.IsValid())
+    {
+#if UE_EDITOR
+        Debug_ResponseCode = Response->GetResponseCode();
+        Debug_ContentAsString = Response->GetContentAsString();
+        if(Debug_ResponseCode != 200)
+        {
+            auto ErrorMsg = FString::Printf(TEXT("%d,%s,%s"), Debug_ResponseCode, *Response->GetURL(), *Debug_ContentAsString);
+            UE_LOG(LogTemp, Error, TEXT("%s"), *ErrorMsg)
+            if(GEngine)
+                GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, *ErrorMsg);
+        }
+#endif
+    }
 }

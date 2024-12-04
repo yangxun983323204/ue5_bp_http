@@ -78,6 +78,7 @@ bool UHttpRequestWrapper::ProcessRequest()
         this->HeaderReceivedDelegate.ExecuteIfBound(this, name, val);
     });
 
+    SetDebugInfo();
     return Request->ProcessRequest();
 }
 
@@ -114,4 +115,19 @@ int UHttpRequestWrapper::GetStatus()
 UHttpResponseWrapper* UHttpRequestWrapper::GetResponse()
 {
     return UHttpResponseWrapper::CreateFromExternalPtr(Request->GetResponse());
+}
+
+void UHttpRequestWrapper::SetDebugInfo()
+{
+    if(Request.IsValid())
+    {
+#if UE_EDITOR
+        Debug_Verb = Request->GetVerb();
+        Debug_URL = Request->GetURL();
+        Debug_Headers = Request->GetAllHeaders();
+
+        FUTF8ToTCHAR TCHARData(reinterpret_cast<const ANSICHAR*>(Request->GetContent().GetData()), Request->GetContent().Num());
+        Debug_ContentAsString = FString(TCHARData.Length(), TCHARData.Get());
+#endif
+    }
 }

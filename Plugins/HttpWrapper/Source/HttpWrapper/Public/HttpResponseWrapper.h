@@ -28,4 +28,14 @@ public:
 
 private:
     FHttpResponsePtr Response;
+
+public:
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 Debug_ResponseCode;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Debug_ContentAsString;
+
+    void SetDebugInfo();
 };
